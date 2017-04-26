@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 import org.joda.time.DateTime;
 
+import javax.annotation.Nullable;
+
 /**
  * This is to create a object holding the entry data
  * Created by awaldman on 4/18/17.
@@ -15,6 +17,7 @@ import org.joda.time.DateTime;
 @JsonDeserialize(as = ImmutableDBEntry.class)
 public interface DBEntry {
 
+	@Nullable
 	@Value.Parameter
 	String entryID();
 
@@ -30,10 +33,19 @@ public interface DBEntry {
 	@Value.Parameter
 	String resourceAccessed();
 
+	@Nullable
 	@Value.Parameter
 	String username();
 
+	@Nullable
 	@Value.Parameter
 	DateTime datetime();
+
+	@Nullable
+	@Value.Parameter
+	String fileExtension();
+
+	@Value.Parameter
+	String client();
 
 }
