@@ -38,6 +38,13 @@ public class EntryParserTest {
 	}
 
 	@Test
+	public void testMultiPatternMatching() {
+		String multiParse = String.join("\n", entries);
+		List<DBEntry> dbEntryAll = EntryParser.parse(multiParse);
+		Assert.assertEquals(dbEntryAll.size(), 5);
+	}
+
+	@Test
 	public void testNonMatchingEntry() {
 		List<DBEntry> dbEntryOne = EntryParser.parse(entries.get(5));
 		Assert.assertTrue(dbEntryOne.isEmpty());

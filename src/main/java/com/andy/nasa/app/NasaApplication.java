@@ -32,8 +32,7 @@ public class NasaApplication extends Application<NasaConfig>{
 
 		ESHealthCheck esHealthCheck = new ESHealthCheck(restClient);
 		environment.healthChecks().register("es health check", esHealthCheck);
-		// Pass restclient into the nasa resource (for queries)
-		final NasaResource nasaResource = new NasaResource();
+		final NasaResource nasaResource = new NasaResource(restClient);
 		environment.jersey().register(nasaResource);
 	}
 

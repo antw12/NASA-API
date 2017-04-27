@@ -48,6 +48,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.zackehh</groupId>
+            <artifactId>jive</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
             <version>${dropwizard.version}</version>
