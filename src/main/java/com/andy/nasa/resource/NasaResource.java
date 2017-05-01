@@ -5,16 +5,15 @@ import com.andy.nasa.parser.EntryParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+import com.sun.org.apache.regexp.internal.RE;
 import com.zackehh.jackson.Jive;
 import io.dropwizard.jackson.Jackson;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.List;
@@ -95,5 +94,80 @@ public class NasaResource {
 				.stream(bucketArray)
 				.map(bucketNode -> bucketNode.path("key").asText())
 				.collect(Collectors.toList());
+	}
+
+	@GET
+	@Path("/top-n-users/{nUsers}")
+	public List<String> topNUsers(@PathParam("nUsers") Integer nUsers) throws Exception{
+		String endpoint = "/nasa/log/_search";
+		JsonNode myQuery = newObjectNode(
+				newJsonEntry("size", 0),
+				newJsonEntry("aggs", newObjectNode(
+						newJsonEntry("group_by_username", newObjectNode(
+								newJsonEntry("terms", newObjectNode(
+										newJsonEntry("field", "username"),
+										newJsonEntry("size", nUsers)
+								))
+						))
+				))
+		);
+		String queryString = objectMapper.writeValueAsString(myQuery);
+
+		Response response = restClient.performRequest(
+				"GET",
+				endpoint,
+				Collections.emptyMap(),
+				new NStringEntity(queryString)
+		);
+		JsonNode jsonNode = objectMapper.readTree(response.getEntity().getContent());
+		JsonNode buckets = jsonNode
+				.path("aggregations")
+				.path("group_by_username")
+				.path("buckets");
+		ArrayNode bucketArray = (ArrayNode) buckets;
+
+		return Jive
+				.stream(bucketArray)
+				.map(bucketNode -> bucketNode.path("key").asText())
+				.collect(Collectors.toList());
+	}
+
+	@GET
+	@Path("/average-payload-size")
+	public Integer averagePayloadSize() throws Exception{
+		String endpoint = "/nasa/log/_search";
+		JsonNode myQuery = newObjectNode(
+				newJsonEntry("size", 0),
+				newJsonEntry("aggs", newObjectNode(
+						newJsonEntry("by_payloadSize", newObjectNode(
+								newJsonEntry("terms", newObjectNode(
+										newJsonEntry("field", "payloadSize"),
+										newJsonEntry("size", 1)
+								)),
+							newJsonEntry("aggs", newObjectNode(
+								newJsonEntry("total_payloadsize", newObjectNode(
+										newJsonEntry("sum", newObjectNode(
+												newJsonEntry("field", "payloadSize")
+										))
+								))
+							))
+						))
+				))
+		);
+
+		String queryString = objectMapper.writeValueAsString(myQuery);
+		Response response = restClient.performRequest(
+				"GET",
+				endpoint,
+				Collections.emptyMap(),
+				new NStringEntity(queryString)
+		);
+		JsonNode jsonNode = objectMapper.readTree(response.getEntity().getContent());
+		JsonNode totalPayloadSize = jsonNode
+				.path("aggregations")
+				.path("by_payloadSize")
+				.path("buckets")
+				.path("total_payloadSize");
+		return totalPayloadSize.path("value").asInt();
 	}
 }
