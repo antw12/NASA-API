@@ -9,17 +9,17 @@ import io.dropwizard.Configuration;
  * Created by awaldman on 4/18/17.
  */
 public class NasaConfig extends Configuration{
-	private final ElasticSearchConfig elasticSearchConfig;
-	/**
-	 * This is the constructor for Service configuration
-	 */
-	@JsonCreator
-	private NasaConfig(@JsonProperty("elasticsearch") ElasticSearchConfig elasticSearchConfig) {
-		this.elasticSearchConfig = elasticSearchConfig;
-	}
+    private final ElasticSearchConfig elasticSearchConfig;
+    /**
+     * This is the constructor for Service configuration
+     */
+    @JsonCreator
+    private NasaConfig(@JsonProperty("elasticsearch") ElasticSearchConfig elasticSearchConfig) {
+        this.elasticSearchConfig = elasticSearchConfig;
+    }
 
-	public ElasticSearchConfig getElasticSearchConfig(){
-		return elasticSearchConfig;
-	}
+    public ElasticSearchConfig getElasticSearchConfig(){
+        return elasticSearchConfig;
+    }
 
 }

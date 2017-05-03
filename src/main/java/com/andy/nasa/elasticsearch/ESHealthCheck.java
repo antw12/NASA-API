@@ -13,29 +13,29 @@ import org.elasticsearch.client.RestClient;
  * Created by awaldman on 4/19/17.
  */
 public class ESHealthCheck extends HealthCheck {
-	private final RestClient restClient;
-	private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestClient restClient;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public ESHealthCheck(RestClient restClient) {
-		this.restClient = restClient;
-	}
+    public ESHealthCheck(RestClient restClient) {
+        this.restClient = restClient;
+    }
 
-	@Override
-	protected Result check() throws Exception {
+    @Override
+    protected Result check() throws Exception {
 
-		final Response response = restClient.performRequest(
-				"GET",
-				"_cluster/health"
-		);
+        final Response response = restClient.performRequest(
+                "GET",
+                "_cluster/health"
+        );
 
-		String body = EntityUtils.toString(response.getEntity());
-		JsonNode jsonNode = objectMapper.readTree(body);
-		String status = jsonNode.path("status").asText();
+        String body = EntityUtils.toString(response.getEntity());
+        JsonNode jsonNode = objectMapper.readTree(body);
+        String status = jsonNode.path("status").asText();
 
-		if (StringUtils.equalsAny(status, "red", "yellow")) {
-			return Result.unhealthy("Last status: %s", status);
-		} else {
-			return Result.healthy("Last status: %s", status);
-		}
-	}
+        if (StringUtils.equalsAny(status, "red", "yellow")) {
+            return Result.unhealthy("Last status: %s", status);
+        } else {
+            return Result.healthy("Last status: %s", status);
+        }
+    }
 }

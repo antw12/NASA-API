@@ -17,35 +17,35 @@ import javax.annotation.Nullable;
 @JsonDeserialize(as = ImmutableDBEntry.class)
 public interface DBEntry {
 
-	@Nullable
-	@Value.Parameter
-	String entryID();
+    @Nullable
+    @Value.Parameter
+    String entryID();
 
-	@Value.Parameter
-	Integer responseCode();
+    @Value.Parameter
+    Integer responseCode();
 
-	@Value.Parameter
-	String restfulAPI();
+    @Value.Parameter
+    String restfulAPI();
 
-	@Value.Parameter
-	Integer payloadSize();
+    @Value.Parameter
+    Integer payloadSize();
 
-	@Value.Parameter
-	String resourceAccessed();
+    @Value.Parameter
+    String resourceAccessed();
 
-	@Nullable
-	@Value.Parameter
-	String username();
+    @Nullable
+    @Value.Parameter
+    String username();
 
-	@Nullable
-	@Value.Parameter
-	DateTime datetime();
+    @Nullable
+    @Value.Parameter
+    DateTime datetime();
 
-	@Nullable
-	@Value.Parameter
-	String fileExtension();
+    @Nullable
+    @Value.Parameter
+    String fileExtension();
 
-	@Value.Parameter
-	String client();
+    @Value.Parameter
+    String client();
 
 }

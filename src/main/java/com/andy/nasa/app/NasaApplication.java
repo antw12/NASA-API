@@ -14,30 +14,30 @@ import org.elasticsearch.client.RestClient;
  */
 public class NasaApplication extends Application<NasaConfig>{
 
-	public static void main(String[] args) throws Exception {
-		new NasaApplication().run(args);
-	}
+    public static void main(String[] args) throws Exception {
+        new NasaApplication().run(args);
+    }
 
-	@Override
-	public void run(NasaConfig nasaConfig, Environment environment) throws Exception {
-		RestClient restClient = RestClient
-				.builder(
-					new HttpHost(
-							nasaConfig.getElasticSearchConfig().getHost(),
-							nasaConfig.getElasticSearchConfig().getPort(),
-							"http"
-					)
-				)
-				.build();
+    @Override
+    public void run(NasaConfig nasaConfig, Environment environment) throws Exception {
+        RestClient restClient = RestClient
+                .builder(
+                    new HttpHost(
+                            nasaConfig.getElasticSearchConfig().getHost(),
+                            nasaConfig.getElasticSearchConfig().getPort(),
+                            "http"
+                    )
+                )
+                .build();
 
-		ESHealthCheck esHealthCheck = new ESHealthCheck(restClient);
-		environment.healthChecks().register("es health check", esHealthCheck);
-		final NasaResource nasaResource = new NasaResource(restClient);
-		environment.jersey().register(nasaResource);
-	}
+        ESHealthCheck esHealthCheck = new ESHealthCheck(restClient);
+        environment.healthChecks().register("es health check", esHealthCheck);
+        final NasaResource nasaResource = new NasaResource(restClient);
+        environment.jersey().register(nasaResource);
+    }
 
-	@Override
-	public String getName() {
-		return "NASA - Application";
-	}
+    @Override
+    public String getName() {
+        return "NASA - Application";
+    }
 }
