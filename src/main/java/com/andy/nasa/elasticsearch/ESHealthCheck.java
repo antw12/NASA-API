@@ -16,10 +16,22 @@ public class ESHealthCheck extends HealthCheck {
     private final RestClient restClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Constructed for the health class getting the restclient needed
+     * to be used for getting response from elastic search on connection between
+     * application and elastic search
+     * @param restClient
+     */
     public ESHealthCheck(RestClient restClient) {
         this.restClient = restClient;
     }
 
+    /**
+     * Override from health check to perform a check on the connection
+     * between this drop wizard application and the elastic search
+     * @return
+     * @throws Exception
+     */
     @Override
     protected Result check() throws Exception {
 

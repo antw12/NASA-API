@@ -5,7 +5,6 @@ import com.andy.nasa.parser.EntryParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.zackehh.jackson.Jive;
 import com.zackehh.jackson.stream.JiveCollectors;
@@ -13,7 +12,6 @@ import io.dropwizard.jackson.Jackson;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
-import org.immutables.value.internal.$processor$.meta.$ValueMirrors;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -37,7 +35,7 @@ public class NasaResource {
     private final RestClient restClient;
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final String endpoint = "/nasa/log/";
-    private final Map.Entry<String,JsonNode> size = newJsonEntry("size", 0);
+    private final Map.Entry<String, JsonNode> size = newJsonEntry("size", 0);
 
     /**
      * This creates an instances of the NasaResource passing the rest client for es5
@@ -48,6 +46,11 @@ public class NasaResource {
         this.restClient = restClient;
     }
 
+    /**
+     * When called this API will post data to elastic search
+     * @param entryPayload
+     * @throws Exception
+     */
     @POST
     @Path("/entry")
     public void writeToDB(String entryPayload) throws Exception {
@@ -65,6 +68,11 @@ public class NasaResource {
         }
     }
 
+    /**
+     * This API queries for the top 5 users
+     * @return List<String>
+     * @throws Exception
+     */
     @GET
     @Path("/top-five-users")
     public List<String> topFiveUsers() throws Exception {
@@ -79,16 +87,26 @@ public class NasaResource {
                 ))
             ))
         );
+        // input stream returning the response in bytes form the request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // getting the path to the buckets from the input stream
         JsonNode buckets = getPath(in, "aggregations", "group_by_username", "buckets");
+        // turning the buckets in to an json array
         ArrayNode bucketArray = (ArrayNode) buckets;
-
+        // use a stream of each bucket returned getting the value of key and collecting it in list form
         return Jive
                 .stream(bucketArray)
                 .map(bucketNode -> bucketNode.path("key").asText())
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This API queries for the top n amount of users and returns a list
+     * in descending order from most seen user
+     * @param nUsers
+     * @return List<String>
+     * @throws Exception
+     */
     @GET
     @Path("/top-n-users/{nUsers}")
     public List<String> topNUsers(@PathParam("nUsers") Integer nUsers) throws Exception {
@@ -106,13 +124,18 @@ public class NasaResource {
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
         JsonNode buckets = getPath(in, "aggregations", "group_by_username", "buckets");
         ArrayNode bucketArray = (ArrayNode) buckets;
-
+        // use a stream of each bucket returned getting the value of key and collecting it in list form
         return Jive
                 .stream(bucketArray)
                 .map(bucketNode -> bucketNode.path("key").asText())
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This API will query for the average payload size all of all the entries in the DB
+     * @return float
+     * @throws Exception
+     */
     @GET
     @Path("/average-payload-size")
     public float averagePayloadSize() throws Exception {
@@ -126,11 +149,19 @@ public class NasaResource {
                     ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode averagePayloadSize = getPath(in, "aggregations", "average_payloadsize");
+        // returning the value of the average payload size
         return averagePayloadSize.path("value").floatValue();
     }
 
+    /**
+     * This API will return the users that request the most amount of data
+     * @return ObjectNode
+     * @throws Exception
+     */
     @GET
     @Path("/users/data")
     public ObjectNode getUsersMostData() throws Exception {
@@ -155,8 +186,11 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "by_user", "buckets");
+        // returning the value of the average payload size
         ArrayNode arrayNode = (ArrayNode) buckets;
 
         return Jive
@@ -169,6 +203,11 @@ public class NasaResource {
 
     }
 
+    /**
+     * This API will return the number of all the clients (non-duplicates)
+     * @return Integer
+     * @throws Exception
+     */
     @GET
     @Path("/clients/unique")
     public Integer getUniqueClients() throws Exception {
@@ -182,11 +221,18 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode clients = getPath(in, "aggregations", "distinct_clients");
         return clients.path("value").asInt();
     }
 
+    /**
+     * This API will return how many requests were sent everymonth
+     * @return ObjectNode
+     * @throws Exception
+     */
     @GET
     @Path("/months/requests")
     public ObjectNode requestsPerMonth() throws Exception {
@@ -201,8 +247,11 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery,"search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "get_months", "buckets");
+        // returning the value of the average payload size
         ArrayNode bucketArray = (ArrayNode) buckets;
 
         return Jive
@@ -214,6 +263,11 @@ public class NasaResource {
                 .collect(JiveCollectors.toObjectNode());
     }
 
+    /**
+     * This API will return the error rate for a request of data from NASA
+     * @return double
+     * @throws Exception
+     */
     @GET
     @Path("/error/rate")
     public double errorRate() throws Exception{
@@ -221,7 +275,9 @@ public class NasaResource {
                 "GET",
                 endpoint + "_count"
         );
+        // content of the response from the query request
         InputStream in = response.getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         Integer totalDocs = getPath(in, "count").asInt();
 
         JsonNode myQueryTwo = newObjectNode(
@@ -239,11 +295,18 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream inTwo = performQueryRequest(myQueryTwo, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         Double errorDocTotal = getPath(inTwo, "aggregations", "filter_responseCode", "doc_count").asDouble();
         return (errorDocTotal / totalDocs) * 100;
     }
 
+    /**
+     * This API will return the error rate for each month
+     * @return ObjectNode
+     * @throws Exception
+     */
     @GET
     @Path("/error/rate/month")
     public ObjectNode errorRatePerMonth() throws Exception {
@@ -270,19 +333,28 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "get_months", "buckets");
+        // returning the value of the average payload size
         ArrayNode bucketArray = (ArrayNode) buckets;
 
         return Jive
                 .stream(bucketArray)
                 .map(bucketNode -> Jive.newJsonEntry(
                         bucketNode.path("key").asText(),
-                        (bucketNode.path("filter_responseCode").path("doc_count").asDouble() / bucketNode.path("doc_count").asDouble()) * 100
+                        (bucketNode.path("filter_responseCode").path("doc_count").asDouble()
+                                / bucketNode.path("doc_count").asDouble()) * 100
                 ))
                 .collect(JiveCollectors.toObjectNode());
     }
 
+    /**
+     * This API will return the most popular extensions from resources requested
+     * @return
+     * @throws Exception
+     */
     @GET
     @Path("/extensions/popular")
     public ObjectNode getPopularExtensions() throws Exception {
@@ -296,8 +368,11 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "group_file_extensions", "buckets");
+        // returning the value of the average payload size
         ArrayNode bucketArray = (ArrayNode) buckets;
         return Jive
                 .stream(bucketArray)
@@ -308,9 +383,15 @@ public class NasaResource {
                 .collect(JiveCollectors.toObjectNode());
     }
 
+    /**
+     * This API will return number of times an extension was requested
+     * @param extension
+     * @return Integer
+     * @throws Exception
+     */
     @GET
     @Path("/extensions/{extension}")
-    public Integer getPopularExtensions(@PathParam("extension") String extension) throws Exception{
+    public Integer getNumberExtensionRequest(@PathParam("extension") String extension) throws Exception{
         JsonNode myQuery = newObjectNode(
                 newJsonEntry("query", newObjectNode(
                         newJsonEntry("constant_score", newObjectNode(
@@ -322,10 +403,16 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "count").getEntity().getContent();
         return getPath(in, "count").intValue();
     }
 
+    /**
+     * This API will get all the restAPI calls and how many times each one was used
+     * @return Object Node
+     * @throws Exception
+     */
     @GET
     @Path("/api/call")
     public ObjectNode getApiCalls() throws Exception {
@@ -340,7 +427,9 @@ public class NasaResource {
                 ))
         );
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "group_by_api", "buckets");
+        // returning the value of the average payload size
         ArrayNode bucketArray = (ArrayNode) buckets;
         return Jive
                 .stream(bucketArray)
@@ -351,6 +440,12 @@ public class NasaResource {
                 .collect(JiveCollectors.toObjectNode());
     }
 
+    /**
+     * This API is used to get the number of requests a given user makes to the NASA data
+     * @param user
+     * @return ObjectNode
+     * @throws Exception
+     */
     @GET
     @Path("/requests/{user}")
     public ObjectNode getRequestsUser(@PathParam("user") String user) throws Exception{
@@ -374,8 +469,11 @@ public class NasaResource {
                         ))
                 ))
         );
+        // content of the response from the query request
         InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
+        // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "group_by_api", "buckets");
+        // returning the value of the average payload size
         ArrayNode bucketArray = (ArrayNode) buckets;
         return Jive
                 .stream(bucketArray)
@@ -386,7 +484,15 @@ public class NasaResource {
                 .collect(JiveCollectors.toObjectNode());
     }
 
-    private Response performQueryRequest(JsonNode jsonNode, String queryType) throws Exception {
+    /**
+     * This method is use to set up and perform the http request/ elastic search query
+     * which then returns the response to that request
+     * @param jsonNode
+     * @param queryType
+     * @return Response
+     * @throws Exception
+     */
+    Response performQueryRequest(JsonNode jsonNode, String queryType) throws Exception {
         return  restClient.performRequest(
             "GET",
             endpoint + "_" + queryType,
@@ -395,7 +501,15 @@ public class NasaResource {
         );
     }
 
-    private JsonNode getPath(InputStream in, String... paths) throws Exception {
+    /**
+     * This method will get Json object at a certain path in the response object
+     * mainly used to simplify code, keep it more maintainable and use variadic variables
+     * @param in
+     * @param paths
+     * @return JsonNode
+     * @throws Exception
+     */
+    JsonNode getPath(InputStream in, String... paths) throws Exception {
         JsonNode jsonNode = objectMapper.readTree(in);
         for (String str : paths){
             jsonNode = jsonNode.path(str);
