@@ -138,7 +138,7 @@ public class NasaResource {
      */
     @GET
     @Path("/average-payload-size")
-    public float averagePayloadSize() throws Exception {
+    public double averagePayloadSize() throws Exception {
         JsonNode myQuery = newObjectNode(
             size,
                 newJsonEntry("aggs", newObjectNode(
@@ -154,7 +154,7 @@ public class NasaResource {
         // get the information from the specified path from the input stream (response)
         JsonNode averagePayloadSize = getPath(in, "aggregations", "average_payloadsize");
         // returning the value of the average payload size
-        return averagePayloadSize.path("value").floatValue();
+        return averagePayloadSize.path("value").asDouble();
     }
 
     /**
@@ -248,7 +248,7 @@ public class NasaResource {
                 ))
         );
         // content of the response from the query request
-        InputStream in = performQueryRequest(myQuery,"search").getEntity().getContent();
+        InputStream in = performQueryRequest(myQuery, "search").getEntity().getContent();
         // get the information from the specified path from the input stream (response)
         JsonNode buckets = getPath(in, "aggregations", "get_months", "buckets");
         // returning the value of the average payload size
