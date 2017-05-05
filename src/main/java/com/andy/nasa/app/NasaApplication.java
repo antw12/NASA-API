@@ -4,7 +4,10 @@ import com.andy.nasa.configuration.NasaConfig;
 import com.andy.nasa.elasticsearch.ESHealthCheck;
 import com.andy.nasa.resource.NasaResource;
 import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 
@@ -18,6 +21,9 @@ public class NasaApplication extends Application<NasaConfig>{
         //starts drop wizard application
         new NasaApplication().run(args);
     }
+
+    @Override
+    public void initialize(Bootstrap<NasaConfig> bootstrap) { }
 
     /**
      * This method is from dropwizard application class and is used to set up
@@ -41,7 +47,16 @@ public class NasaApplication extends Application<NasaConfig>{
         ESHealthCheck esHealthCheck = new ESHealthCheck(restClient);
         environment.healthChecks().register("es health check", esHealthCheck);
         final NasaResource nasaResource = new NasaResource(restClient);
+
+        // Setting up Swagger
+        environment.jersey().register(new ApiListingResource());
         environment.jersey().register(nasaResource);
+        // More Swagger stuff
+        BeanConfig config = new BeanConfig();
+        config.setTitle("NASA Swagger");
+        config.setVersion("1.0.0");
+        config.setResourcePackage("com.andy.nasa.resource");
+        config.setScan(true);
     }
 
     /**

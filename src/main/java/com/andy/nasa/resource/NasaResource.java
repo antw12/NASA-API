@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.zackehh.jackson.Jive;
 import com.zackehh.jackson.stream.JiveCollectors;
 import io.dropwizard.jackson.Jackson;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
@@ -29,6 +31,7 @@ import static com.zackehh.jackson.Jive.newObjectNode;
  * Created by awaldman on 4/18/17.
  */
 @Path("/")
+@Api
 @Produces(MediaType.APPLICATION_JSON)
 public class NasaResource {
 

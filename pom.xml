@@ -62,7 +62,8 @@
         <dropwizard.version>1.1.0</dropwizard.version>
         <elasticsearch.version>5.2.0</elasticsearch.version>
         <testng.version>6.11</testng.version>
-        <swagger.verison>1.5.13</swagger.verison>
+        <swagger.version>1.5.13</swagger.version>
+        <dropwizard-swagger.version>1.1.0-1</dropwizard-swagger.version>
     </properties>
 
     <dependencies>
@@ -101,7 +102,32 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>${swagger.verison}</version>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smoketurner</groupId>
+            <artifactId>dropwizard-swagger</artifactId>
+            <version>${dropwizard-swagger.version}</version>
+        </dependency>
+        <!-- Swagger dependencies -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jersey2-jaxrs</artifactId>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-multipart</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-servlet-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
