@@ -1,5 +1,6 @@
 package com.andy.nasa.resource;
 
+import com.andy.nasa.Event.DatabaseHandler;
 import com.andy.nasa.configuration.NasaConfig;
 import com.andy.nasa.configuration.configs.ElasticSearchConfig;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -57,8 +58,8 @@ public class NasaResourceTest {
                     )
             )
             .build();
-
-        nasaResource = new NasaResource(restClient);
+        DatabaseHandler databaseHandler = new DatabaseHandler(restClient);
+        nasaResource = new NasaResource(restClient, databaseHandler);
     }
 
     /**
@@ -66,8 +67,8 @@ public class NasaResourceTest {
      * @throws Exception
      */
     @Test
-    public void testWriteToDB() throws Exception{
-        nasaResource.writeToDB("202.32.92.47 - - [01/Jun/1995, 00, 00, 59 -0600] \"GET /~scottp/publish.html\" 200 271");
+    public void testEntryInsertion() throws Exception{
+        nasaResource.entryInsertion("202.32.92.47 - - [01/Jun/1995, 00, 00, 59 -0600] \"GET /~scottp/publish.html\" 200 271");
         JsonNode myQuery = newObjectNode(
                 newJsonEntry("query", newObjectNode(
                         newJsonEntry("constant_score", newObjectNode(

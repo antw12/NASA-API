@@ -1,5 +1,6 @@
 package com.andy.nasa.resource;
 
+import com.andy.nasa.Event.DatabaseHandler;
 import com.andy.nasa.model.DBEntry;
 import com.andy.nasa.parser.EntryParser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,7 +11,6 @@ import com.zackehh.jackson.Jive;
 import com.zackehh.jackson.stream.JiveCollectors;
 import io.dropwizard.jackson.Jackson;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
@@ -36,6 +36,7 @@ import static com.zackehh.jackson.Jive.newObjectNode;
 public class NasaResource {
 
     private final RestClient restClient;
+    private final DatabaseHandler databaseHandler;
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final String endpoint = "/nasa/log/";
     private final Map.Entry<String, JsonNode> size = newJsonEntry("size", 0);
@@ -45,8 +46,9 @@ public class NasaResource {
      * this allows me to interact over http to elastic search
      * @param restClient
      */
-    public NasaResource(RestClient restClient) {
+    public NasaResource(RestClient restClient, DatabaseHandler databaseHandler) {
         this.restClient = restClient;
+        this.databaseHandler = databaseHandler;
     }
 
     /**
@@ -56,19 +58,8 @@ public class NasaResource {
      */
     @POST
     @Path("/entry")
-    public void writeToDB(String entryPayload) throws Exception {
-        List<DBEntry> nasaData = EntryParser.parse(entryPayload);
-
-        for (DBEntry entry: nasaData) {
-            String jsonString = objectMapper.writeValueAsString(entry);
-            //write to db as json
-            restClient.performRequest(
-                "PUT",
-                endpoint + entry.entryID(),
-                Collections.emptyMap(),
-                new NStringEntity(jsonString)
-            );
-        }
+    public void entryInsertion(String entryPayload) throws Exception {
+        databaseHandler.writeToDB(entryPayload);
     }
 
     /**

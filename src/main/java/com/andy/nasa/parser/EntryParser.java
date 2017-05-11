@@ -8,7 +8,6 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -23,17 +22,11 @@ import java.util.regex.Pattern;
  */
 public class EntryParser {
 
-    private static final Pattern p = Pattern.compile("^(.+) - - \\[(.+)\\] \"(\\w+) (.+)\" (\\d{3}) (\\d+).*$");
+    private static final Pattern p = Pattern.compile("(.+) - - \\[(.+)\\] \"(\\w+) (.+?)\" (\\d{3}) (-|\\d*)");
     private static final Pattern usernameP = Pattern.compile("^\\/~(.*?)(\\/.*)$");
     private static final DateTimeFormatter dateTime = DateTimeFormat.forPattern("dd/MMM/yyyy:HH:mm:ss Z");
     private static final Pattern fileEWithUser = Pattern.compile("^\\/~(.*)\\/(.*)\\.(.*)$");
     private static final Pattern fileEWithoutUser = Pattern.compile("^\\/(.*)\\.(.*) (.*)$");
-
-    public static void main(String[] args) throws Exception {
-        MatchResult e = patternMatching("202.32.92.47 - - [01/Jun/1995:00:00:59 -0600] \"GET /~scottp/publish.html\" 200 271");
-        DateTime s = makeDateTime(e);
-        System.out.println(s);
-    }
 
     /**
      * Due to the data being sent as bytes (due to serialisation) changing it to a string
@@ -41,7 +34,6 @@ public class EntryParser {
      * @param entryString
      * @return DBEntry
      */
-    @Nonnull
     public static List<DBEntry> parse(String entryString) {
         List<DBEntry> dbEntries = new ArrayList<>();
         List<String> entries = Splitter
@@ -52,7 +44,8 @@ public class EntryParser {
         for (String entry : entries) {
             MatchResult matchResult = patternMatching(entry);
             if (matchResult == null) {
-                continue;
+                System.out.print("Null match " + "   " + entry);
+                return null;
             }
             String entryID = createHashEntryValue(entry);
             String client = matchResult.group(1);
@@ -61,7 +54,7 @@ public class EntryParser {
             String fileExtension = getFileExtension(matchResult);
             String restApiCall = matchResult.group(3);
             Integer responseCode = Integer.parseInt(matchResult.group(5));
-            Integer payloadSize = Integer.parseInt(matchResult.group(6));
+            Integer payloadSize = getPayloadSize(matchResult.group(6));
             String resource = getResource(matchResult);
             dbEntries.add(ImmutableDBEntry
                 .builder()
@@ -128,6 +121,7 @@ public class EntryParser {
         if (withoutUser.matches()) {
             return withoutUser.group(2);
         }
+
         return null;
     }
 
@@ -162,6 +156,19 @@ public class EntryParser {
             return m.group(1);
         }
         return null;
+    }
+
+    /**
+     * This method will get the payload size
+     * @param groupSix
+     * @return
+     */
+    private static Integer getPayloadSize(String groupSix) {
+        if (groupSix.equals("-")){
+            return 0;
+        } else {
+            return Integer.parseInt(groupSix);
+        }
     }
 
     /**
