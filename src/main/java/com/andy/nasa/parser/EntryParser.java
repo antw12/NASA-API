@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormatter;
 import javax.annotation.Nullable;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class EntryParser {
 
-    private static final Pattern p = Pattern.compile("(.+) - - \\[(.+)\\] \"(\\w+) (.+?)\" (\\d{3}) (-|\\d*)");
+    private static final Pattern p = Pattern.compile("(.+) - - \\[(.+)\\] \"(.*?) (.+?)\" (\\d{3}) (-|\\d*)");
     private static final Pattern usernameP = Pattern.compile("^\\/~(.*?)(\\/.*)$");
     private static final DateTimeFormatter dateTime = DateTimeFormat.forPattern("dd/MMM/yyyy:HH:mm:ss Z");
     private static final Pattern fileEWithUser = Pattern.compile("^\\/~(.*)\\/(.*)\\.(.*)$");
@@ -45,7 +46,7 @@ public class EntryParser {
             MatchResult matchResult = patternMatching(entry);
             if (matchResult == null) {
                 System.out.print("Null match " + "   " + entry);
-                return null;
+                continue;
             }
             String entryID = createHashEntryValue(entry);
             String client = matchResult.group(1);
@@ -110,14 +111,13 @@ public class EntryParser {
     //try to optimize the regex out using string splits/ substring searches to peal out the username
     @Nullable
     private static String getFileExtension(MatchResult fileExtension) {
-        String matchResult = fileExtension.group(4);
         //1 with username
-        Matcher withUser = fileEWithUser.matcher(matchResult);
+        Matcher withUser = fileEWithUser.matcher(fileExtension.group(4));
         if (withUser.matches()) {
             return withUser.group(3);
         }
         //3 without username  /images/logo.gif HTTP/1.0
-        Matcher withoutUser = fileEWithoutUser.matcher(matchResult);
+        Matcher withoutUser = fileEWithoutUser.matcher(fileExtension.group(4));
         if (withoutUser.matches()) {
             return withoutUser.group(2);
         }
@@ -131,15 +131,17 @@ public class EntryParser {
      * @return resource | /
      */
     private static String getResource(MatchResult groupFour){
-        String user = groupFour.group(4);
-        Matcher m = usernameP.matcher(user);
+        Matcher m = usernameP.matcher(groupFour.group(4));
         if (m.matches()) {
             return m.group(2);
         }
-        String [] resource = user.split("\\s+");
+
+        String [] resource = groupFour.group(4).split("\\s+");
         if (resource.length > 1) {
             return resource[0];
         }
+
+        // default for root resource
         return "/";
     }
 
@@ -150,8 +152,7 @@ public class EntryParser {
      */
     @Nullable
     private static String getUsername(MatchResult groupFour) {
-        String user = groupFour.group(4);
-        Matcher m = usernameP.matcher(user);
+        Matcher m = usernameP.matcher(groupFour.group(4));
         if (m.matches()) {
             return m.group(1);
         }

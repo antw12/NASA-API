@@ -1,8 +1,6 @@
 package com.andy.nasa.resource;
 
-import com.andy.nasa.Event.DatabaseHandler;
-import com.andy.nasa.model.DBEntry;
-import com.andy.nasa.parser.EntryParser;
+import com.andy.nasa.event.DatabaseHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

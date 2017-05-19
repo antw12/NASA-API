@@ -1,6 +1,6 @@
 package com.andy.nasa.service;
 
-import com.andy.nasa.Event.DatabaseHandler;
+import com.andy.nasa.event.DatabaseHandler;
 import com.rabbitmq.client.*;
 import io.dropwizard.lifecycle.Managed;
 
@@ -34,9 +34,7 @@ public class ServiceRabbitIngestion implements Managed {
         public void handleDelivery(String consumerTag, Envelope envelope,
                                    AMQP.BasicProperties properties, byte[] body) throws IOException {
             try {
-//                String message = new String(body, "UTF-8");
                 databaseHandler.writeToDB(new String(body, "UTF-8"));
-//                System.out.println(message);
             } catch(Exception e) {
                 e.printStackTrace();
             }

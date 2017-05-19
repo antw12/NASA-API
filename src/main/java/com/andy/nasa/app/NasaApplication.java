@@ -1,11 +1,10 @@
 package com.andy.nasa.app;
 
-import com.andy.nasa.Event.DatabaseHandler;
+import com.andy.nasa.event.DatabaseHandler;
 import com.andy.nasa.configuration.NasaConfig;
 import com.andy.nasa.elasticsearch.ESHealthCheck;
 import com.andy.nasa.resource.NasaResource;
 import com.andy.nasa.service.ServiceRabbitIngestion;
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import io.dropwizard.Application;
@@ -15,9 +14,6 @@ import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
-
-import javax.xml.crypto.Data;
 
 /**
  * This class sets and ads resources aka apis to drop wizard in addition to creating the drop wizard application
