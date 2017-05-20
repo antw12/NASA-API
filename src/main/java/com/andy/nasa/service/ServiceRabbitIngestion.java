@@ -14,8 +14,13 @@ import java.io.IOException;
  */
 public class ServiceRabbitIngestion implements Managed {
 
+    //Used to write to the DB on consuming a message
     private final DatabaseHandler databaseHandler;
+
+    //connection to rabbit
     private Connection connection;
+
+    //channel of rabbit used to consume
     private Channel channel;
 
     /**
@@ -29,11 +34,16 @@ public class ServiceRabbitIngestion implements Managed {
         channel  = connection.createChannel();
     }
 
-    Consumer consumer = new DefaultConsumer(channel) {
+    /**
+     * This is a consumer which is prepared for consuming a message
+     */
+    private Consumer consumer = new DefaultConsumer(channel) {
+        // overriding the consuming of a message from rabbit
         @Override
         public void handleDelivery(String consumerTag, Envelope envelope,
                                    AMQP.BasicProperties properties, byte[] body) throws IOException {
             try {
+                // write the entry to the db
                 databaseHandler.writeToDB(new String(body, "UTF-8"));
             } catch(Exception e) {
                 e.printStackTrace();
@@ -41,15 +51,24 @@ public class ServiceRabbitIngestion implements Managed {
         }
     };
 
+    /**
+     * This is the method invoked whilst the application
+     * is still alive
+     * @throws Exception
+     */
     @Override
     public void start() throws Exception {
         String queueName = "nasa-queue";
         channel.basicConsume(queueName, true, consumer);
     }
 
+    /**
+     * This closed the connection to rabbit
+     * on closing the application
+     * @throws Exception
+     */
     @Override
     public void stop() throws Exception {
-//        System.out.println("finished");
         connection.close();
     }
 }
