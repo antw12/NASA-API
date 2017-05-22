@@ -78,7 +78,7 @@ public class EntryParser {
      * This method creates a MD5 hash from the entry string to enter into the db
      * this is to make sure there is no duplicate data
      * in this case there wont (NASA Data) be however good practise
-     * @param singleEntry
+     * @param singleEntry entry used for hash ID
      * @return stringBuilder.toString | null
      */
     @Nullable
@@ -105,7 +105,7 @@ public class EntryParser {
     /**
      * This class will find the file extension of the resource access
      * If there is not one then it will also return that there is not one
-     * @param fileExtension
+     * @param fileExtension give the matched entry
      * @return fileExtension | null
      */
     @Nullable
@@ -128,7 +128,7 @@ public class EntryParser {
      * This class will find the file extension of the resource access
      * If there is not one then it will also return that there is not one
      * with string manipulation
-     * @param fileExtension
+     * @param fileExtension give the matched entry
      * @return fileExtension | null
      */
     @Nullable
@@ -146,7 +146,7 @@ public class EntryParser {
 
     /**
      * This method will return the resource location
-     * @param groupFour
+     * @param groupFour give the matched entry
      * @return resource | /
      */
     private static String getResource(MatchResult groupFour){
@@ -167,7 +167,7 @@ public class EntryParser {
     /**
      * This method will return the resource location
      * using string manipulation
-     * @param groupFour
+     * @param groupFour give the matched entry
      * @return resource | /
      */
     private static String getResourceS(MatchResult groupFour) {
@@ -195,7 +195,7 @@ public class EntryParser {
 
     /**
      * This method will return the user name if it exists
-     * @param groupFour
+     * @param groupFour give the matched entry
      * @return username | null
      */
     @Nullable
@@ -210,7 +210,7 @@ public class EntryParser {
     /**
      * This method will return the user name if it exists
      * this one however uses string manipulation
-     * @param groupFour
+     * @param groupFour give the matched entry
      * @return username | null
      */
     @Nullable
@@ -228,8 +228,8 @@ public class EntryParser {
 
     /**
      * This method will get the payload size
-     * @param groupSix
-     * @return
+     * @param groupSix give the matched entry for group 6 of the match
+     * @return Integer return the payload size
      */
     private static Integer getPayloadSize(String groupSix) {
         if (groupSix.equals("-")){
@@ -242,7 +242,7 @@ public class EntryParser {
     /**
      * This method will get the date and return the data in a nice format
      * including changing it to central timezone
-     * @param dateTimeZone
+     * @param dateTimeZone give the matched entry
      * @return DateTime | null
      */
     @Nullable
@@ -257,7 +257,7 @@ public class EntryParser {
 
     /**
      * This method returns if the entry matches the data pattern needed to be entered into the DB
-     * @param entry
+     * @param entry give the entry to match and be parsed
      * @return MatchResult | null
      */
     @Nullable

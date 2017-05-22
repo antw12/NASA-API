@@ -20,8 +20,6 @@ import org.elasticsearch.client.RestClient;
  * Created by awaldman on 4/18/17.
  */
 public class NasaApplication extends Application<NasaConfig>{
-    // This is the exchange name where the messages will be sent
-    private static final String EXCHANGE_NAME = "nasa_logs";
 
     public static void main(String[] args) throws Exception {
         //starts drop wizard application
@@ -34,9 +32,9 @@ public class NasaApplication extends Application<NasaConfig>{
     /**
      * This method is from dropwizard application class and is used to set up
      * all the resources necessary for the application to do its job
-     * @param nasaConfig
-     * @param environment
-     * @throws Exception
+     * @param nasaConfig this is where all configs are stored
+     * @param environment drop wizard set up class
+     * @throws Exception IOException for serviceRabbitIngestion
      */
     @Override
     public void run(NasaConfig nasaConfig, Environment environment) throws Exception {
@@ -87,7 +85,7 @@ public class NasaApplication extends Application<NasaConfig>{
     /**
      * This method override is to give the application a name
      * it will appear on a run
-     * @return
+     * @return string the name of the application
      */
     @Override
     public String getName() {

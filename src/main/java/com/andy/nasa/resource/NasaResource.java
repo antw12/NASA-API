@@ -51,7 +51,7 @@ public class NasaResource {
     /**
      * This creates an instances of the NasaResource passing the rest client for es5
      * this allows me to interact over http to elastic search
-     * @param restClient
+     * @param restClient instance of ES rest client for local use
      */
     public NasaResource(RestClient restClient, DatabaseHandler databaseHandler) {
         this.restClient = restClient;
@@ -60,8 +60,8 @@ public class NasaResource {
 
     /**
      * When called this API will post data to elastic search
-     * @param entryPayload
-     * @throws Exception
+     * @param entryPayload give one entry to the entry API
+     * @throws Exception language exception
      */
     @POST
     @Path("/entry")
@@ -71,8 +71,8 @@ public class NasaResource {
 
     /**
      * This API queries for the top 5 users
-     * @return List<String>
-     * @throws Exception
+     * @return List<String> list of the top 5 users
+     * @throws Exception throws language exception
      */
     @GET
     @Path("/top-five-users")
@@ -104,9 +104,9 @@ public class NasaResource {
     /**
      * This API queries for the top n amount of users and returns a list
      * in descending order from most seen user
-     * @param nUsers
+     * @param nUsers the amount of users wanted returning
      * @return List<String>
-     * @throws Exception
+     * @throws Exception language exception
      */
     @GET
     @Path("/top-n-users/{nUsers}")
@@ -134,8 +134,8 @@ public class NasaResource {
 
     /**
      * This API will query for the average payload size all of all the entries in the DB
-     * @return float
-     * @throws Exception
+     * @return float of the average payload size
+     * @throws Exception language exception
      */
     @GET
     @Path("/average-payload-size")
@@ -160,8 +160,8 @@ public class NasaResource {
 
     /**
      * This API will return the users that request the most amount of data
-     * @return ObjectNode
-     * @throws Exception
+     * @return ObjectNode string in json form of the user with amount of data
+     * @throws Exception language exception
      */
     @GET
     @Path("/users/data")
@@ -206,8 +206,8 @@ public class NasaResource {
 
     /**
      * This API will return the number of all the clients (non-duplicates)
-     * @return Integer
-     * @throws Exception
+     * @return Integer number of unique clients
+     * @throws Exception language exception
      */
     @GET
     @Path("/clients/unique")
@@ -230,9 +230,9 @@ public class NasaResource {
     }
 
     /**
-     * This API will return how many requests were sent everymonth
-     * @return ObjectNode
-     * @throws Exception
+     * This API will return how many requests were sent every month
+     * @return ObjectNode string in json format of month and amount of requests
+     * @throws Exception language exception
      */
     @GET
     @Path("/months/requests")
@@ -266,8 +266,8 @@ public class NasaResource {
 
     /**
      * This API will return the error rate for a request of data from NASA
-     * @return double
-     * @throws Exception
+     * @return double the error rate of all the requests made
+     * @throws Exception language exception
      */
     @GET
     @Path("/error/rate")
@@ -305,8 +305,8 @@ public class NasaResource {
 
     /**
      * This API will return the error rate for each month
-     * @return ObjectNode
-     * @throws Exception
+     * @return ObjectNode string in json format with the month and amount of failed requests
+     * @throws Exception language exception
      */
     @GET
     @Path("/error/rate/month")
@@ -353,8 +353,8 @@ public class NasaResource {
 
     /**
      * This API will return the most popular extensions from resources requested
-     * @return
-     * @throws Exception
+     * @return ObjectNode string in json format holding extension and how many of them
+     * @throws Exception language exception
      */
     @GET
     @Path("/extensions/popular")
@@ -386,9 +386,9 @@ public class NasaResource {
 
     /**
      * This API will return number of times an extension was requested
-     * @param extension
-     * @return Integer
-     * @throws Exception
+     * @param extension the extension to query on how many times a resource with it was requested
+     * @return Integer the amount of time the extension was found on a resource
+     * @throws Exception language exception
      */
     @GET
     @Path("/extensions/{extension}")
@@ -412,8 +412,8 @@ public class NasaResource {
     /**
      * This API will get all the restAPI calls and how many times each one was used
      * only three as they are the only ones that matter
-     * @return Object Node
-     * @throws Exception
+     * @return ObjectNode string in json format of api calls & times that api appeared
+     * @throws Exception language exception
      */
     @GET
     @Path("/api/call")
@@ -445,9 +445,9 @@ public class NasaResource {
 
     /**
      * This API is used to get the number of requests a given user makes to the NASA data
-     * @param user
-     * @return ObjectNode
-     * @throws Exception
+     * @param user the user getting queried
+     * @return ObjectNode string in json format with user and number of requests made
+     * @throws Exception language exception
      */
     @GET
     @Path("/requests/{user}")
@@ -490,12 +490,13 @@ public class NasaResource {
     /**
      * This method is use to set up and perform the http request/ elastic search query
      * which then returns the response to that request
-     * @param jsonNode
-     * @param queryType
-     * @return Response
-     * @throws Exception
+     * @param jsonNode give it the query, the json formatted query
+     * @param queryType the type of query e.g _search
+     * @return Response return the response to the query
+     * @throws Exception language exception
+     * @throws Exception language exception
      */
-    Response performQueryRequest(JsonNode jsonNode, String queryType) throws Exception {
+    private Response performQueryRequest(JsonNode jsonNode, String queryType) throws Exception {
         return  restClient.performRequest(
             "GET",
             endpoint + "_" + queryType,
@@ -507,12 +508,12 @@ public class NasaResource {
     /**
      * This method will get Json object at a certain path in the response object
      * mainly used to simplify code, keep it more maintainable and use variadic variables
-     * @param in
-     * @param paths
-     * @return JsonNode
-     * @throws Exception
+     * @param in give input stream (response from request)
+     * @param paths the path to the information wanted
+     * @return JsonNode return json node of result
+     * @throws Exception language exception
      */
-    JsonNode getPath(InputStream in, String... paths) throws Exception {
+    private JsonNode getPath(InputStream in, String... paths) throws Exception {
         JsonNode jsonNode = objectMapper.readTree(in);
         for (String str : paths){
             jsonNode = jsonNode.path(str);

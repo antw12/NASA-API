@@ -13,14 +13,18 @@ import org.elasticsearch.client.RestClient;
  * Created by awaldman on 4/19/17.
  */
 public class ESHealthCheck extends HealthCheck {
+
+    // ES rest client instance
     private final RestClient restClient;
+
+    // json mapper object
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Constructed for the health class getting the restclient needed
      * to be used for getting response from elastic search on connection between
      * application and elastic search
-     * @param restClient
+     * @param restClient for connecting to ES
      */
     public ESHealthCheck(RestClient restClient) {
         this.restClient = restClient;
@@ -29,12 +33,13 @@ public class ESHealthCheck extends HealthCheck {
     /**
      * Override from health check to perform a check on the connection
      * between this drop wizard application and the elastic search
-     * @return
-     * @throws Exception
+     * @return the status of the ES cluster
+     * @throws Exception IOExceptions
      */
     @Override
     protected Result check() throws Exception {
 
+        //perform the request to ES for health check
         final Response response = restClient.performRequest(
                 "GET",
                 "_cluster/health"

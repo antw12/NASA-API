@@ -40,7 +40,7 @@ public class DatabaseHandler {
     /**
      * Constructor for DatabaseHandler in which has a fixed scheduler
      * that will perform flush every 5 seconds
-     * @param restClient
+     * @param restClient storing given rest client locally
      */
     public DatabaseHandler(RestClient restClient) {
         this.restClient = restClient;
@@ -53,8 +53,8 @@ public class DatabaseHandler {
     /**
      * This is the write to DB method which will write the data
      * to ES local instance
-     * @param entryPayload
-     * @throws Exception
+     * @param entryPayload the entry to be wrote to the DB
+     * @throws Exception Jackson process exception
      */
     public void writeToDB(String entryPayload) throws Exception {
         List<DBEntry> nasaData = EntryParser.parse(entryPayload);

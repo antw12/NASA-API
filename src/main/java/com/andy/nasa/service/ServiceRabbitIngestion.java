@@ -26,7 +26,7 @@ public class ServiceRabbitIngestion implements Managed {
     /**
      * This constructs the class that ingests messages
      * from rabbit
-     * @param
+     * @param databaseHandler connection both needed to be able to connect to ES and write to
      */
     public ServiceRabbitIngestion(DatabaseHandler databaseHandler, Connection connection) throws IOException {
         this.databaseHandler = databaseHandler;
@@ -54,7 +54,7 @@ public class ServiceRabbitIngestion implements Managed {
     /**
      * This is the method invoked whilst the application
      * is still alive
-     * @throws Exception
+     * @throws Exception IOException
      */
     @Override
     public void start() throws Exception {
@@ -65,7 +65,7 @@ public class ServiceRabbitIngestion implements Managed {
     /**
      * This closed the connection to rabbit
      * on closing the application
-     * @throws Exception
+     * @throws Exception IOException
      */
     @Override
     public void stop() throws Exception {
