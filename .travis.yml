@@ -1,3 +1,4 @@
 # Travis file for build checks
 language: java
-script: mvn clean install
+sudo: false
+script: mvn clean verify
