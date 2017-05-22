@@ -108,7 +108,6 @@ public class EntryParser {
      * @param fileExtension
      * @return fileExtension | null
      */
-    //try to optimize the regex out using string splits/ substring searches to peal out the username
     @Nullable
     private static String getFileExtension(MatchResult fileExtension) {
         //1 with username
@@ -126,6 +125,26 @@ public class EntryParser {
     }
 
     /**
+     * This class will find the file extension of the resource access
+     * If there is not one then it will also return that there is not one
+     * with string manipulation
+     * @param fileExtension
+     * @return fileExtension | null
+     */
+    @Nullable
+    private static String getFileExtensionS(MatchResult fileExtension) {
+        //get the file extension if it exists, if not return default
+        String[] strings = fileExtension.group(4).split("\\s+");
+        String[] strings1 = strings[0].split("\\.");
+        if (strings1.length >= 2) {
+            return strings1[1];
+        }
+
+        // return null as default, being there no resource
+        return null;
+    }
+
+    /**
      * This method will return the resource location
      * @param groupFour
      * @return resource | /
@@ -136,9 +155,38 @@ public class EntryParser {
             return m.group(2);
         }
 
-        String [] resource = groupFour.group(4).split("\\s+");
+        String[] resource = groupFour.group(4).split("\\s+");
         if (resource.length > 1) {
             return resource[0];
+        }
+
+        // default for root resource
+        return "/";
+    }
+
+    /**
+     * This method will return the resource location
+     * using string manipulation
+     * @param groupFour
+     * @return resource | /
+     */
+    private static String getResourceS(MatchResult groupFour) {
+        // resource with username
+            String[] strings = groupFour.group(4).split("\\s+");
+            if (strings[0].contains("/~")) {
+                // username exists on containing the characters above
+                String[] strings1 = strings[0].split("\\/");
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 2; i < strings1.length; i++) {
+                    stringBuilder.append("/");
+                    stringBuilder.append(strings1[i]);
+                }
+                return stringBuilder.toString();
+            }
+
+        // resource with no username
+        if (strings.length > 1) {
+            return strings[0];
         }
 
         // default for root resource
@@ -156,6 +204,25 @@ public class EntryParser {
         if (m.matches()) {
             return m.group(1);
         }
+        return null;
+    }
+
+    /**
+     * This method will return the user name if it exists
+     * this one however uses string manipulation
+     * @param groupFour
+     * @return username | null
+     */
+    @Nullable
+    private static String getUsernameS(MatchResult groupFour) {
+        // check to see if entry has username
+        if (groupFour.group(4).contains("/~")) {
+            // username exists on containing the characters above
+            String[] strings = groupFour.group(4).split("\\/~");
+            String[] strings1 = strings[1].split("\\/");
+            return strings1[0];
+        }
+        // no username return null
         return null;
     }
 
