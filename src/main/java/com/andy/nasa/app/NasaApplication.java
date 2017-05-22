@@ -59,6 +59,7 @@ public class NasaApplication extends Application<NasaConfig>{
         // Passing the rest client for the API's to use
         final NasaResource nasaResource = new NasaResource(restClient, databaseHandler);
 
+        // Set up connection to rabbit
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(nasaConfig.getRabbitConfig().getHost());
         factory.setPort(nasaConfig.getRabbitConfig().getPort());
@@ -66,6 +67,7 @@ public class NasaApplication extends Application<NasaConfig>{
         factory.setPassword(nasaConfig.getRabbitConfig().getPass());
         Connection connection = factory.newConnection();
 
+        // create a consumer / subscriber for rabbit
         ServiceRabbitIngestion serviceRabbitIngestion = new ServiceRabbitIngestion(databaseHandler, connection);
         environment.lifecycle().manage(serviceRabbitIngestion);
 

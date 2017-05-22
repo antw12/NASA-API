@@ -33,10 +33,19 @@ import static com.zackehh.jackson.Jive.newObjectNode;
 @Produces(MediaType.APPLICATION_JSON)
 public class NasaResource {
 
+    // rest client for ES
     private final RestClient restClient;
+
+    // database handler to allow writing to database
     private final DatabaseHandler databaseHandler;
+
+    // this is to map json values
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
+
+    // end point for index and indices
     private final String endpoint = "/nasa/log/";
+
+    // common field in query taken as global for removal of redundant code
     private final Map.Entry<String, JsonNode> size = newJsonEntry("size", 0);
 
     /**
@@ -402,6 +411,7 @@ public class NasaResource {
 
     /**
      * This API will get all the restAPI calls and how many times each one was used
+     * only three as they are the only ones that matter
      * @return Object Node
      * @throws Exception
      */
@@ -413,7 +423,8 @@ public class NasaResource {
                 newJsonEntry("aggs", newObjectNode(
                         newJsonEntry("group_by_api", newObjectNode(
                                 newJsonEntry("terms", newObjectNode(
-                                        newJsonEntry("field", "restfulAPI")
+                                        newJsonEntry("field", "restfulAPI"),
+                                        newJsonEntry("size", 3)
                                 ))
                         ))
                 ))
