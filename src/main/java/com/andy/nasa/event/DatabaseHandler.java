@@ -48,6 +48,9 @@ public class DatabaseHandler {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         // else nothing until there's stuff there
         scheduler.scheduleAtFixedRate(this::flush, 5, 5, TimeUnit.SECONDS);
+
+        // send mappings for the data
+
     }
 
     /**

@@ -1,0 +1,35 @@
+{
+  "mappings": {
+    "log": {
+      "properties": {
+        "entryID": {
+          "type": "keyword"
+        },
+        "responseCode": {
+          "type": "keyword"
+        },
+        "restfulAPI": {
+          "type": "keyword"
+        },
+        "payloadSize": {
+          "type": "integer"
+        },
+        "resourceAccessed": {
+          "type": "keyword"
+        },
+        "username": {
+          "type": "keyword"
+        },
+        "datetime": {
+          "type": "date"
+        },
+        "fileExtension": {
+          "type": "keyword"
+        },
+        "client": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}

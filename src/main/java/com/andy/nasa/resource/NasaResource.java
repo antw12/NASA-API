@@ -364,7 +364,8 @@ public class NasaResource {
                 newJsonEntry("aggs", newObjectNode(
                         newJsonEntry("group_file_extensions", newObjectNode(
                                 newJsonEntry("terms", newObjectNode(
-                                        newJsonEntry("field", "fileExtension")
+                                        newJsonEntry("field", "fileExtension"),
+                                        newJsonEntry("size", 5)
                                 ))
                         ))
                 ))
