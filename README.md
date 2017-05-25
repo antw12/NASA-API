@@ -57,7 +57,15 @@ https://github.com/antw12/Node-NASA-Client
 
 10. Done!!!! 
 
+# Tests
 
+### Integrated Tests
+ 
+ The Integrated tests, I am using travis, to spin up an instance of Elastic search exposing 9200, 9300. Then entering in the data from a file, (5000 entries) and then using the queries from the API's to then make sure that data is being inserted correctly and that the queries return what is expected.
+ 
+### Unit Tests 
+
+ The unit tests make sure that the incoming entries are parsed, and not only parsed, but parsed correctly, in addition to making sure that the entry objects are created correctly and that entries that don't match the requirements are ignored 
 
 
 
