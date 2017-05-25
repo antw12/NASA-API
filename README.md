@@ -1,5 +1,5 @@
 # NASA-API
-https://travis-ci.org/antw12/NASA-API.svg?branch=master
+[![Build Status](https://travis-ci.org/antw12/NASA-API.svg?branch=master)](https://travis-ci.org/antw12/NASA-API)
 
 The NASA-API project was a learning project that I created in my spare time to become familiar with some technologies I had not had experience with. In addition to becoming familiar, it also taught me new syntax for Java (Java 8), in addition to becoming accustomed to Git, Github and subversion control. 
 
