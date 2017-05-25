@@ -37,7 +37,7 @@ https://github.com/antw12/Node-NASA-Client
 
 1. First you will need to have maven installed.
 
-`brew install maven`
+  `brew install maven`
 
 2. Inside the directory of the NASA-API project, run `mvn clean install` to make sure all tests pass and the clone was clean.
 
