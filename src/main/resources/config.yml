@@ -2,8 +2,6 @@ elasticsearch:
   host: "localhost"
   port: 9200
 
-defaultName: "swagger"
-
 rabbit:
   host: localhost #gatekeeper-preprod-mq.cloud.appctest.com
   port: 5672
