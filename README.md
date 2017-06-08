@@ -34,6 +34,7 @@ https://github.com/antw12/Node-NASA-Client
 `git clone https://github.com/antw12/Node-NASA-Client.git`
 
 # How To Run
+(If in Intelij open up run configuration for the application and add `server <config.yml> `)
 
 1. First you will need to have maven installed.
 
