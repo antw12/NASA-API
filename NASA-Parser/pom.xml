@@ -28,6 +28,11 @@
             <version>2.4.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <artifactId>NASA</artifactId>
+            <groupId>com.andy.nasa</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
 
 
