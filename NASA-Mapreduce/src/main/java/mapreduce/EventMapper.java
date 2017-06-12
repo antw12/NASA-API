@@ -1,7 +1,7 @@
 package mapreduce;
 
-import com.andy.nasa.model.DBEntry;
-import com.andy.nasa.parser.EntryParser;
+import model.DBEntry;
+import parser.EntryParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import org.apache.hadoop.io.*;

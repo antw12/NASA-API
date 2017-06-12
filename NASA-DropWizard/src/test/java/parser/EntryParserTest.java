@@ -1,6 +1,6 @@
-package com.andy.nasa.parser;
+package parser;
 
-import com.andy.nasa.model.DBEntry;
+import model.DBEntry;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;

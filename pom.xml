@@ -72,30 +72,13 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-            <groupId>com.sebastian-daschner</groupId>
-            <artifactId>jaxrs-analyzer-maven-plugin</artifactId>
-            <version>0.14</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>analyze-jaxrs</goal>
-                    </goals>
-                    <configuration>
-                        <!-- Available backends are plaintext (default), swagger and asciidoc -->
-                        <backend>swagger</backend>
-                        <!-- Domain of the deployed project, defaults to example.com -->
-                        <deployedDomain>localhost</deployedDomain>
-                    </configuration>
-                </execution>
-            </executions>
-            </plugin>
         </plugins>
     </build>
 
     <modules>
         <module>NASA-Mapreduce</module>
         <module>NASA-DropWizard</module>
+        <module>NASA-Parser</module>
     </modules>
 
     <properties>

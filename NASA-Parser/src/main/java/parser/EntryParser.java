@@ -1,8 +1,8 @@
-package com.andy.nasa.parser;
+package parser;
 
-import com.andy.nasa.model.DBEntry;
-import com.andy.nasa.model.ImmutableDBEntry;
 import com.google.common.base.Splitter;
+import model.DBEntry;
+import model.ImmutableDBEntry;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;

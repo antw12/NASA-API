@@ -1,4 +1,4 @@
-package com.andy.nasa.model;
+package model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
