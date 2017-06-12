@@ -3,7 +3,6 @@ package mapreduce;
 import model.DBEntry;
 import parser.EntryParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dropwizard.jackson.Jackson;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -17,7 +16,7 @@ import java.util.List;
  */
 class EventMapper extends Mapper<LongWritable, Text, NullWritable, BytesWritable> {
 
-    private final ObjectMapper mapper = Jackson.newObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     EventMapper() {
     }

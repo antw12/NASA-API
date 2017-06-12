@@ -24,8 +24,13 @@
         </dependency>
         <dependency>
             <groupId>com.andy.nasa</groupId>
-            <artifactId>NASA-DropWizard</artifactId>
+            <artifactId>NASA-Parser</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.8.1</version>
         </dependency>
     </dependencies>
 
