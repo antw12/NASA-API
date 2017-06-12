@@ -136,26 +136,26 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!--&lt;!&ndash; Swagger dependencies &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>io.swagger</groupId>-->
-            <!--<artifactId>swagger-jersey2-jaxrs</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.glassfish.jersey.media</groupId>-->
-                    <!--<artifactId>jersey-media-multipart</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.glassfish.jersey.containers</groupId>-->
-                    <!--<artifactId>jersey-container-servlet-core</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-                    <!--<artifactId>jackson-dataformat-yaml</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
+        <!-- Swagger dependencies -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jersey2-jaxrs</artifactId>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-multipart</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-servlet-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>com.andy.nasa</groupId>
             <artifactId>NASA-Parser</artifactId>
