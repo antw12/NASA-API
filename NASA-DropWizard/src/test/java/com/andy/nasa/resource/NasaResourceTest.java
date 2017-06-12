@@ -3,13 +3,13 @@ package com.andy.nasa.resource;
 import com.andy.nasa.configuration.NasaConfig;
 import com.andy.nasa.configuration.configs.ElasticSearchConfig;
 import com.andy.nasa.event.DatabaseHandler;
-import model.DBEntry;
-import parser.EntryParser;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.jackson.Jackson;
+import model.DBEntry;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
@@ -20,6 +20,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import parser.EntryParser;
 
 import java.io.*;
 import java.util.ArrayList;
