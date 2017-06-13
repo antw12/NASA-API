@@ -26,6 +26,12 @@
             <groupId>com.andy.nasa</groupId>
             <artifactId>NASA-DropWizard</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.dropwizard</groupId>
+                    <artifactId>dropwizard-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
