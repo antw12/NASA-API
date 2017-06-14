@@ -12,6 +12,11 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.elasticsearch.hadoop.mr.EsOutputFormat;
 
+import static org.apache.hadoop.mapreduce.MRJobConfig.MAP_SPECULATIVE;
+import static org.apache.hadoop.mapreduce.MRJobConfig.REDUCE_SPECULATIVE;
+import static org.elasticsearch.hadoop.cfg.ConfigurationOptions.ES_INPUT_JSON;
+import static org.elasticsearch.hadoop.cfg.ConfigurationOptions.ES_RESOURCE_WRITE;
+
 
 /**
  * Used to take in nasa data to then me mapped and placed into elastic search
@@ -27,11 +32,17 @@ public class NasaHadoop extends Configured implements Tool {
     @Override
     public int run(String[] strings) throws Exception {
         Configuration conf = this.getConf();
-        conf.set("es.nodes", "localhost:9200");
-        conf.set("es.resource", "nasa/log");
-//        conf.set("es.input.json", "yes");
+        conf.set("es.nodes", "localhost");
+        conf.set("es.port", "9200");
+        conf.set(ES_RESOURCE_WRITE, "nasa/log");
+        conf.set(ES_INPUT_JSON, "true");
+        conf.set("es.batch.size.entries", "100");
 
-        Job job = Job.getInstance(conf);
+        conf.setBoolean(MAP_SPECULATIVE, false);
+        conf.setBoolean(REDUCE_SPECULATIVE, false);
+
+        Job job = Job.getInstance(conf, getClass().getName());
+        job.setJarByClass(getClass());
 
         // configure the input and output types, and the class types
         job.setMapperClass(EventMapper.class);
