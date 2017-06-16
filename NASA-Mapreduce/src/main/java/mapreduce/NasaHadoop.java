@@ -5,6 +5,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -15,6 +16,7 @@ import org.elasticsearch.hadoop.mr.EsOutputFormat;
 import static org.apache.hadoop.mapreduce.MRJobConfig.MAP_SPECULATIVE;
 import static org.apache.hadoop.mapreduce.MRJobConfig.REDUCE_SPECULATIVE;
 import static org.elasticsearch.hadoop.cfg.ConfigurationOptions.ES_INPUT_JSON;
+import static org.elasticsearch.hadoop.cfg.ConfigurationOptions.ES_MAPPING_ID;
 import static org.elasticsearch.hadoop.cfg.ConfigurationOptions.ES_RESOURCE_WRITE;
 
 
@@ -36,10 +38,7 @@ public class NasaHadoop extends Configured implements Tool {
         conf.set("es.port", "9200");
         conf.set(ES_RESOURCE_WRITE, "nasa/log");
         conf.set(ES_INPUT_JSON, "true");
-        conf.set("es.batch.size.entries", "100");
-
-        conf.setBoolean(MAP_SPECULATIVE, false);
-        conf.setBoolean(REDUCE_SPECULATIVE, false);
+        conf.set(ES_MAPPING_ID, "entryID");
 
         Job job = Job.getInstance(conf, getClass().getName());
         job.setJarByClass(getClass());
@@ -48,7 +47,7 @@ public class NasaHadoop extends Configured implements Tool {
         job.setMapperClass(EventMapper.class);
         job.setInputFormatClass(TextInputFormat.class); //default
         job.setOutputKeyClass(NullWritable.class );
-        job.setOutputValueClass(BytesWritable.class);
+        job.setOutputValueClass(Text.class);
         job.setOutputFormatClass(EsOutputFormat.class);
         job.setNumReduceTasks(0);
 

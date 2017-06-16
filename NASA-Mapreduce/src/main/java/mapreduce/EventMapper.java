@@ -1,6 +1,8 @@
 package mapreduce;
 
+import io.dropwizard.jackson.Jackson;
 import model.DBEntry;
+import org.elasticsearch.hadoop.util.BytesArray;
 import parser.EntryParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.io.*;
@@ -14,9 +16,9 @@ import java.util.List;
  * ready to be inserted into ES when the map job is run
  * Created by awaldman on 6/5/17.
  */
-class EventMapper extends Mapper<LongWritable, Text, NullWritable, BytesWritable> {
+class EventMapper extends Mapper<LongWritable, Text, NullWritable, Text> {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = Jackson.newObjectMapper();
 
     EventMapper() {
     }
@@ -26,7 +28,7 @@ class EventMapper extends Mapper<LongWritable, Text, NullWritable, BytesWritable
                        Mapper<LongWritable,
                                Text,
                                NullWritable,
-                               BytesWritable>.Context context)
+                               Text>.Context context)
             throws IOException, InterruptedException {
 
         // from the line of input parse out an entry
@@ -35,8 +37,7 @@ class EventMapper extends Mapper<LongWritable, Text, NullWritable, BytesWritable
         // iterates once getting entry and readying it for es insertion
         for (DBEntry entry: dbEntry) {
             String output = mapper.writeValueAsString(entry);
-            BytesWritable byteOutput = new BytesWritable(output.getBytes());
-            context.write(NullWritable.get(), byteOutput);
+            context.write(NullWritable.get(), new Text(output));
         }
     }
 }
